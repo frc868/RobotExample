@@ -10,8 +10,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.Drivetrain.Constants.LEFT_MOTOR;
-import frc.robot.subsystems.Drivetrain.Constants.RIGHT_MOTOR;
+import frc.robot.subsystems.Drivetrain.Constants.*;
 
 /** An example of a tank drive robot subsystem controlled by an xbox controller */
 public class Drivetrain extends SubsystemBase {
