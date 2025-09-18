@@ -73,7 +73,7 @@ public class Drivetrain extends SubsystemBase {
      * The configuration object for the left motor
      */
     private TalonFXConfiguration leftConfig = new TalonFXConfiguration();
-   /**
+    /**
      * The object for the right motor's controller
      */
     private TalonFX rightMotor = new TalonFX(RIGHT_MOTOR.CAN_ID);
@@ -93,7 +93,7 @@ public class Drivetrain extends SubsystemBase {
     /**
      * The constructor for the drivetrain object, including this whole file.
      * Call this in RobotContainer.java to create an instance of this code!
-     * @return an instance of the drivetrain object
+     * @return an instance of the drivetrain class
      */
     public Drivetrain() {
         // Configure everything we set in the constants on the drive motors, including inversion, current limit, and neutral mode
@@ -116,9 +116,16 @@ public class Drivetrain extends SubsystemBase {
         System.out.println("Drivetrain initialized!");
     }
 
+    /**
+     * A command to drive the robot tank, meaning one joystick is responsible
+     * for left wheel rotation and the other for right wheel rotation
+     * @param left speed
+     * @param right speed
+     * @return the command to run
+     */
     public Command tankDrive(DoubleSupplier left, DoubleSupplier right) {
         return run(() -> {
             drivetrain.tankDrive(left.getAsDouble(), right.getAsDouble());
-        });
+        }).withName("drivetrain.tankDrive");
     }
 }
