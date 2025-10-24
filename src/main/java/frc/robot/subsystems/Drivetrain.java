@@ -8,6 +8,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Drivetrain.Constants.*;
@@ -127,5 +128,20 @@ public class Drivetrain extends SubsystemBase {
         return run(() -> {
             drivetrain.tankDrive(left.getAsDouble(), right.getAsDouble());
         }).withName("drivetrain.tankDrive");
+    }
+
+    /** 
+     * The periodic method for the drivetrain, which runs is called by the
+     * {@link edu.wpi.first.wpilibj2.command.CommandScheduler CommandScheduler} every interation (by default every .02s) 
+     */
+    @Override
+    public void periodic() {
+        // Log current and voltage of both drive motors
+        SmartDashboard.putNumber("drivetrain/leftMotor/voltage", leftMotor.getMotorVoltage().getValueAsDouble());
+        SmartDashboard.putNumber("drivetrain/leftMotor/current", leftMotor.getStatorCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("drivetrain/rightMotor/voltage", rightMotor.getMotorVoltage().getValueAsDouble());
+        SmartDashboard.putNumber("drivetrain/rightMotor/current", rightMotor.getStatorCurrent().getValueAsDouble());
+
+        // DO NOT control any motors here
     }
 }
