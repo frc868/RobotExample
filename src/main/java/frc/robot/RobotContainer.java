@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Controls;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Shooter;
 import frc.robot.Autos;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -18,6 +19,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   Drivetrain drivetrain = new Drivetrain();
+  Shooter shooter = new Shooter();
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -29,7 +32,7 @@ public class RobotContainer {
    * Use this method to schedule commands based on driver inputs
    */
   private void configureBindings() {
-    Controls.configureControls(drivetrain, Constants.Controls.controllerPort);
+    Controls.configureControls(drivetrain, shooter, Constants.Controls.controllerPort);
   }
 
   /**

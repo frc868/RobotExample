@@ -11,7 +11,8 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.Drivetrain.Constants.*;
+
+import static frc.robot.subsystems.Drivetrain.Constants.*;
 
 /** An example of a tank drive robot subsystem controlled by an xbox controller */
 public class Drivetrain extends SubsystemBase {
@@ -40,8 +41,6 @@ public class Drivetrain extends SubsystemBase {
              * i.e. when you pass in +12V it is converted to -12V before being sent to the motor
              */
             public static final InvertedValue INVERTED = InvertedValue.Clockwise_Positive;
-            // Other constants, such as motion control constants, go here
-
         }
         /** Constants for the right motor of your tank drive robot */
         public static final class RIGHT_MOTOR {
@@ -62,7 +61,6 @@ public class Drivetrain extends SubsystemBase {
              * i.e. when you pass in +12V it is converted to -12V before being sent to the motor
              */
             public static final InvertedValue INVERTED = InvertedValue.CounterClockwise_Positive;
-            // Other constants, such as motion control constants, go here
         }
     }
 
