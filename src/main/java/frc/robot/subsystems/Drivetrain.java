@@ -129,7 +129,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     /** 
-     * The periodic method for the drivetrain, which runs is called by the
+     * The periodic method for the drivetrain, which is called by the
      * {@link edu.wpi.first.wpilibj2.command.CommandScheduler CommandScheduler} every interation (by default every .02s) 
      */
     @Override

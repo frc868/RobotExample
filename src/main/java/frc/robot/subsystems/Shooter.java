@@ -8,10 +8,14 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.Shooter.Constants.MOTOR;
+
 import static frc.robot.subsystems.Shooter.Constants.*;
 
+/** An example of a shooter robot subsystem with velocity motion control */
 public class Shooter extends SubsystemBase {
     public static final class Constants {
          /** Constants for the singular motor of this shooter */
@@ -55,15 +59,14 @@ public class Shooter extends SubsystemBase {
         // The gear ratio betwen the motor and the wheels; used to convert encoders to meaningful units
         public static final double GEAR_RATIO = 15; // TODO
     }
-    /**
-     * The object for the motor's controller
-     */
+    /** The object for the motor's controller */
     private TalonFX motor = new TalonFX(MOTOR.CAN_ID);
-    /**
-     * The configuration object for the motor
-     */
+    /** The configuration object for the motor */
     private TalonFXConfiguration motorConfig = new TalonFXConfiguration();
-
+    /** 
+     * The velocity motion magic controller, which handles feedback, feedforward, and motion 
+     * profiling to achieve a desired velocity 
+     */
     private MotionMagicVelocityVoltage mmRequest = new MotionMagicVelocityVoltage(0);
 
     /**
@@ -72,9 +75,11 @@ public class Shooter extends SubsystemBase {
      * @return an instance of the shooter class
      */
     public Shooter() {
+        // Configure everything we set in the constants on the motor, including inversion, 
+        // current limit, neutral mode, and motion control gains
         motorConfig.MotorOutput
             .withInverted(MOTOR.INVERTED)
-            .withNeutralMode(NeutralModeValue.Coast);
+            .withNeutralMode(NeutralModeValue.Coast); // Coast so it doesn't slam to a stop after each launch
         motorConfig.CurrentLimits
             .withStatorCurrentLimit(MOTOR.CURRENT_LIMIT)
             .withStatorCurrentLimitEnable(true); // Don't change this
@@ -101,5 +106,18 @@ public class Shooter extends SubsystemBase {
         return run(() -> {
             motor.setControl(mmRequest.withVelocity(velocity.getAsDouble()));
         }).withName("shooter.spinAtVelocityCommand");
+    }
+
+    /** 
+     * The periodic method for the shooter, which is called by the
+     * {@link edu.wpi.first.wpilibj2.command.CommandScheduler CommandScheduler} every interation (by default every .02s) 
+     */
+    @Override
+    public void periodic() {
+        // Log current and voltage of our shooter motor
+        SmartDashboard.putNumber("shooter/motor/voltage", motor.getMotorVoltage().getValueAsDouble());
+        SmartDashboard.putNumber("shooter/motor/current", motor.getStatorCurrent().getValueAsDouble());
+        
+        // DO NOT control any motors here
     }
 }
