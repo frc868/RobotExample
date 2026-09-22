@@ -5,10 +5,12 @@
 package frc.robot;
 
 /**
- * A place for ROBOT-WIDE constants to go. Keep individual subsystem contants to their own files
+ * A place for ROBOT-WIDE constants to go. Keep individual subsystem contants to their own files.
  */
 public final class Constants {
+  /** Global controls constants. */
   public static class Controls {
-    public static final int controllerPort = 0;
+    /** The Driver Station port on which your driver's Xbox controller is attached. */
+    public static final int CONTROLLER_PORT = 0;
   }
 }

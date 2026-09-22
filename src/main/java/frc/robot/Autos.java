@@ -4,19 +4,23 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Seconds;
+
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Drivetrain;
 
 public final class Autos {
-  /** Example static factory for an autonomous command. */
-  public static Command exampleAuto(Drivetrain drivetrain) {
-    return Commands.sequence(
-      // Put a super cool auto here!
-    );
-  }
+    /**
+     * An auto which will have the drivetrain move forward at half speed for 2s.
+     * 
+     * @param drivetrain the drivetrain subsystem
+     * @return the auto command
+     */
+    public static Command moveOut(Drivetrain drivetrain) {
+        return drivetrain.tankDriveCommand(() -> .5, () -> .5).withTimeout(Seconds.of(2.0));
+    }
 
-  private Autos() {
-    throw new UnsupportedOperationException("This is a utility class!");
-  }
+    private Autos() {
+        throw new UnsupportedOperationException("This is a utility class!");
+    }
 }
