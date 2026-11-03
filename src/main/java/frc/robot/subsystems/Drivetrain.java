@@ -1,13 +1,16 @@
 package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Degrees;
 import static frc.robot.subsystems.Drivetrain.Constants.*;
 
 /**
@@ -41,7 +45,13 @@ public class Drivetrain extends SubsystemBase {
          */
         public static final int CAN_ID_RIGHT = 2;
         /**
-         * The CAN bus of the device, representing the physical device the daisy chain
+         * The CAN ID of the Pigeon 2.0, representing the identity of the device on the
+         * CAN bus. Each integer can point to only one device, and this must be
+         * configured using Tuner X software.
+         */
+        public static final int CAN_ID_PIGEON = 0;
+        /**
+         * The CAN bus of the devices, representing the physical device the daisy chain
          * originates from.
          */
         public static final String CAN_BUS = "rio";
@@ -56,6 +66,9 @@ public class Drivetrain extends SubsystemBase {
         public static final InvertedValue INVERSION_LEFT = InvertedValue.CounterClockwise_Positive;
         /** The direction the right drive motor should spin with positive voltage. */
         public static final InvertedValue INVERSION_RIGHT = InvertedValue.Clockwise_Positive;
+
+        /** The tolerance (or acceptable delta) */
+        public static final Angle ANGLE_TOLERANCE = Degrees.of(5.0);
     }
 
     /**
@@ -68,6 +81,8 @@ public class Drivetrain extends SubsystemBase {
      * interface with it.
      */
     private final TalonFX rightMotor;
+    /** The object representing the Pigeon 2.0 gyro. */
+    private final Pigeon2 pigeon;
 
     /** A control mode for setting a voltage [-12, 12] on the left motor. */
     private final VoltageOut voltageRequestLeft = new VoltageOut(0.0);
@@ -85,9 +100,10 @@ public class Drivetrain extends SubsystemBase {
      * Call this in RobotContainer.java to create an object of this class!
      */
     public Drivetrain() {
-        // Assing our motors to their CAN IDs and buses
+        // Assigning our devices to their CAN IDs and buses
         leftMotor = new TalonFX(CAN_ID_LEFT, CAN_BUS);
         rightMotor = new TalonFX(CAN_ID_RIGHT, CAN_BUS);
+        pigeon = new Pigeon2(CAN_ID_PIGEON, CAN_BUS);
 
         // The config objects for the motors.
         TalonFXConfiguration leftConfig = new TalonFXConfiguration();
@@ -135,9 +151,23 @@ public class Drivetrain extends SubsystemBase {
     }
 
     /**
+     * A very simple, open loop implementation of roughly turning the robot to a
+     * given angle by spinning counterclockwise until the angle is reached.
+     * 
+     * @param angleSupplier the angle to target
+     * @return the command
+     */
+    public Command turnToAngleCommand(Supplier<Angle> angleSupplier) {
+        return run(() -> {
+            drivetrain.arcadeDrive(0.0, 0.25);
+        }).until(() -> pigeon.getYaw().isNear(angleSupplier.get(), ANGLE_TOLERANCE))
+                .finallyDo(() -> drivetrain.stopMotor()).withName("drivetrain.turnToAngle");
+    }
+
+    /**
      * The periodic method for the drivetrain, which is called by the
      * {@link edu.wpi.first.wpilibj2.command.CommandScheduler CommandScheduler}
-     * every interation (by default every .02s)
+     * every interation (by default every .02s).
      */
     @Override
     public void periodic() {
@@ -147,6 +177,8 @@ public class Drivetrain extends SubsystemBase {
 
         SmartDashboard.putNumber("drivetrain/rightMotor/voltage", rightMotor.getMotorVoltage().getValueAsDouble());
         SmartDashboard.putNumber("drivetrain/rightMotor/current", rightMotor.getStatorCurrent().getValueAsDouble());
+
+        SmartDashboard.putNumber("drivetrain/pigeon/yaw", pigeon.getYaw().getValueAsDouble());
 
         // DO NOT control any motors here
     }
