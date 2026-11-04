@@ -10,15 +10,13 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.*;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.*;
 import static frc.robot.subsystems.Drivetrain.Constants.*;
 
 /**
@@ -167,7 +165,7 @@ public class Drivetrain extends SubsystemBase {
     /**
      * The periodic method for the drivetrain, which is called by the
      * {@link edu.wpi.first.wpilibj2.command.CommandScheduler CommandScheduler}
-     * every interation (by default every .02s).
+     * every iteration (by default every .02s).
      */
     @Override
     public void periodic() {
@@ -178,7 +176,8 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("drivetrain/rightMotor/voltage", rightMotor.getMotorVoltage().getValueAsDouble());
         SmartDashboard.putNumber("drivetrain/rightMotor/current", rightMotor.getStatorCurrent().getValueAsDouble());
 
-        SmartDashboard.putNumber("drivetrain/pigeon/yaw", pigeon.getYaw().getValueAsDouble());
+        // Log pigeon angle
+        SmartDashboard.putNumber("drivetrain/pigeon/yawDegrees", pigeon.getYaw().getValue().in(Degrees));
 
         // DO NOT control any motors here
     }

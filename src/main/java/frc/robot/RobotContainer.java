@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Elevator;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -17,8 +18,9 @@ import edu.wpi.first.wpilibj2.command.Command;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-    // Construct our drivetrain object
+    // Construct our subsystem objects
     Drivetrain drivetrain = new Drivetrain();
+    Elevator elevator = new Elevator();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -32,7 +34,7 @@ public class RobotContainer {
      * Use this method to schedule commands based on driver inputs
      */
     private void configureBindings() {
-        Controls.configureControls(drivetrain, Constants.Controls.CONTROLLER_PORT);
+        Controls.configureControls(drivetrain, elevator, Constants.Controls.CONTROLLER_PORT);
     }
 
     /**
