@@ -14,14 +14,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.Elevator.Constants.POSITION;
 
 import static frc.robot.subsystems.Elevator.Constants.*;
 
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-/** An example of a motion-controlled elevator */
+/** An example of a motion-controlled elevator. */
 public class Elevator extends SubsystemBase {
     /**
      * The variables that will remain the same during the whole time your robot
@@ -29,7 +28,7 @@ public class Elevator extends SubsystemBase {
      * from other variables.
      */
     public static final class Constants {
-        /** The common positions of the elevator in distance from the FLOOR */
+        /** The common positions of the elevator in distance from the FLOOR. */
         public static enum POSITION {
             MIN(Inches.of(6.0)),
             MAX(Feet.of(3.5)),
@@ -187,7 +186,7 @@ public class Elevator extends SubsystemBase {
         return run(() -> {
             motor.setControl(positionRequest
                     .withPosition(Rotations.of(goalPosition.in(Meters) / DRUM_CIRCUMFERENCE.in(Meters))));
-        }).withName("elevator.moveToPosition");
+        }).withName("elevator.moveToGoal");
     }
 
     /**
@@ -212,7 +211,7 @@ public class Elevator extends SubsystemBase {
     public Command moveToArbitraryPositionCommand(Supplier<Distance> positionSupplier) {
         return Commands.runOnce(() -> {
             goalPosition = positionSupplier.get();
-        }).andThen(moveToGoalCommand()).until(this::atGoal).withName("elevator.moveToPosition");
+        }).andThen(moveToGoalCommand()).until(this::atGoal).withName("elevator.moveToArbitraryPosition");
     }
 
     /**
